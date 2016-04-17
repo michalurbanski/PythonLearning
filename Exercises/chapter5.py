@@ -31,12 +31,14 @@ print(do_plus("first ", "second"))
 fridge = {
   'apples' : 10,
   'milk' : 2,
-  'oranges' : 3
+  'oranges' : 3,
+  'eggs' : 2,
+  'cheddar' : 3
 }
 
 wanted_food = "milk"
 
-def in_fridge():
+def in_fridge(fridge, wanted_food):
   """Checks if fridge has a food. Fridge has to be a dictionary populated outside of this function"""
 
   try:
@@ -46,18 +48,22 @@ def in_fridge():
 
   return count
 
-count = in_fridge()
-print(count)
+#count = in_fridge()
+#print(count)
 
-def make_omelet(omelet_type):
+def make_omelet(fridge, omelet_type):
   """Dictionary with ingredients can be passed or only type of omelet"""
+  if type(fridge) == type({}):
+    print("Fridge passed to make_omelet function")
+  else:
+    raise TypeError("Incorrect type of fridge")
 
   if type(omelet_type) == type({}):
     print("Omelet type is a dictionary with ingredients")
-    return make_food(omelet_type, "omelet")
+    return make_food(fridge, omelet_type, "omelet")
   elif type(omelet_type) == type(""):
     omelet_ingredients = get_omelet_ingredients(omelet_type)
-    return make_food(omelet_ingredients, omelet_type)
+    return make_food(fridge, omelet_ingredients, omelet_type)
   else:
     print("I don't know how to make omelet type of type %s" % omelet_type)
 
@@ -77,12 +83,25 @@ def get_omelet_ingredients(omelet_name):
 
   return ingredients
 
-def make_food(ingredients_needed, food_name):
+def make_food(fridge, ingredients_needed, food_name):
   for ingredient in ingredients_needed.keys():
-    print("Adding %d of %s to make a %s " % (ingredients_needed[ingredient], ingredient, food_name))
+    result = remove_from_fridge(fridge, ingredient, ingredients_needed[ingredient])
+    if result == True:
+      print("Adding %d of %s to make a %s " % (ingredients_needed[ingredient], ingredient, food_name))
 
   print("Made %s" % food_name)
   return food_name
 
-omelet_type = make_omelet("cheese")
+def remove_from_fridge(fridge, ingredient, ingredients_needed):
+  count_in_fridge = in_fridge(fridge, ingredient)
+  if count_in_fridge >= ingredients_needed:
+    print("Removing ingredient %s in quantity %d from fridge" % (ingredient, ingredients_needed))
+    fridge[ingredient] -= ingredients_needed
+  else:
+    print("Not enough ingredients of %s in fridge" % ingredient)
+    raise LookupError("Not enough ingredients to make an omelet")
+
+
+omelet_type = make_omelet(fridge, "cheese")
 print("Type of omelet is %s " % omelet_type)
+print("Inside fridge left %s" % fridge)
