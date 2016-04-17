@@ -22,7 +22,7 @@ milk_carton = {
   "brand_name" : "unknown"
 }
 
-# 6. Print values of all dictoinary elements
+# 6. Print values of all dictionary elements
 for i in milk_carton:
   print("%s: %s" % (i, milk_carton[i]))
 
